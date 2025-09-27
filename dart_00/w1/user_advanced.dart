@@ -20,7 +20,6 @@ void main()
     int totalCapacity = 100;
     int customer1Num = 20;
     int customer2Num = 50;
-    int order = customer1Num + customer2Num;
     print("$halisahaName");
     print("Saha Kapasitesi: $totalCapacity");
     print("Mevcut boş alan: ${(totalCapacity - (customer1Num + customer2Num) )}");
