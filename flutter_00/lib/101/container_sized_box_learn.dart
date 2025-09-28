@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ContainerSizedBoxLearn extends StatelessWidget {
-  const ContainerSizedBoxLearn({Key? key}) : super(key: key);
+  const ContainerSizedBoxLearn({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +21,10 @@ class ContainerSizedBoxLearn extends StatelessWidget {
           ),
           Container(
             constraints: const BoxConstraints(maxWidth: 200, minWidth: 100, minHeight: 10, maxHeight: 120),
-            child: Text('c' * 100, maxLines: 2),
             padding: const EdgeInsets.all(10),
             margin: const EdgeInsets.all(10),
             decoration: ProjectUtility.boxDecoraiton,
+            child: Text('c' * 100, maxLines: 2),
           )
         ],
       ),
