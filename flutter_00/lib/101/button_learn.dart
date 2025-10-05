@@ -25,7 +25,7 @@ class ButtonLearn extends StatelessWidget {
             icon: Icon(Icons.star),
             label: Text('Favorite'),
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.blueAccent),
+              backgroundColor: WidgetStateProperty.all(Colors.blueAccent),
               textStyle: WidgetStatePropertyAll(
                 TextStyle(
                   fontSize: 25,
