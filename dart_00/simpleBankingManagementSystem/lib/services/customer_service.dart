@@ -69,8 +69,6 @@ class CustomerService {
     print('$count customers are deleted from system');
   }
 
-  // NOTES: find customer by id with null safety
-
   void printAllCustomers() {
     print('PRINTING ALL THE CUSTOMERS');
     if(_customers.isEmpty) {

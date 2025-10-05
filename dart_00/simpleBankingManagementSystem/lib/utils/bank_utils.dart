@@ -13,7 +13,6 @@ class BankUtils {
   }
 
   static String generateAccountNumber() {
-    // NOTES: needs randomizer
     return 'ACC${DateTime.now().millisecondsSinceEpoch}';
   }
 
