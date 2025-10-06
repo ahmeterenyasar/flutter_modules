@@ -15,7 +15,6 @@ class Customer implements Printable {
     : _name = name,
       this.email = email ?? '$id@deneme.com';
 
-  // getter and setter
   String get name => _name;
   set name(String val) {
     if (val.isValidName) {
@@ -69,7 +68,7 @@ class Customer implements Printable {
     print('= CUSTOMER INFORMATION =');
     print('ID: $id');
     print('Name: $name');
-    print('Phone: ${phone ?? 'Not provided'}'); // null-aware operator
+    print('Phone: ${phone ?? 'Not provided'}');
     print('Email: $email');
     print('Total Accounts: $totalAccounts');
     print('Total Balance: $totalBalance');

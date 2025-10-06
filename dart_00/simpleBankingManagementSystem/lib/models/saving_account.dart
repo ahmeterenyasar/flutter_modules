@@ -20,7 +20,6 @@ class SavingAccount extends BankAccount with TransactionLogger {
     totalSavingAccounts++;
   }
 
-  // getter
   int get remainingWithdraws => _withdrawLimit - _withdrawCount;
   
   @override
