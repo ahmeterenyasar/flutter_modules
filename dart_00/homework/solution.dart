@@ -50,12 +50,12 @@ class User {
     return groups;
   }
 
-  void transfer(Wallet from, Wallet to, double amount) {
+  void transfer(Wallet fromWallet, Wallet toWallet, double amount) {
     if (amount <= 0) {
       throw ArgumentError('Transfer miktarı pozitif olmalıdır');
     }
-    from.withdraw(amount);
-    to.deposit(amount);
+    fromWallet.withdraw(amount);
+    toWallet.deposit(amount);
   }
 
   void addCategory(String name) {
@@ -106,7 +106,7 @@ class User {
     );
     wallets.add(newWallet);
     print(
-      '$categoryName kategorisine $initialBalance₺ bakiyeli yeni cüzdan eklendi',
+      '$categoryName kategorisine $initialBalance bakiyeli yeni cüzdan eklendi',
     );
   }
 
@@ -218,11 +218,11 @@ void main() {
   final vadeli = Category(2, "Vadeli");
   final yatirim = Category(3, "Yatırım");
 
-  try {
-    final asd = Category(-123, "invalid");
-  } catch (e) {
-    print("Hata: $e");
-  }
+  // try {
+  //   final asd = Category(-123, "invalid");
+  // } catch (e) {
+  //   print("Hata: $e");
+  // }
 
   final wallet1 = Wallet(balance: 150000, category: vadesiz);
   final wallet2 = Wallet(balance: 0, category: vadeli);
@@ -274,6 +274,7 @@ void main() {
   user.addCategory("Emeklilik");
   user.addCategory("Altın");
 
+
   user.addCategory("Kripto");
 
   user.listCategories();
@@ -284,7 +285,7 @@ void main() {
   user.addWalletToCategory("Emlak", 75000);
 
   print("Toplam Cüzdan Sayısı: ${user.getWalletCount()}");
-  print("Toplam Bakiye: ${user.getTotalBalance()} ₺");
+  print("Toplam Bakiye: ${user.getTotalBalance()}");
 
   print("\n============================\n");
 
