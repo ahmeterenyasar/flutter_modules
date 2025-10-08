@@ -1,11 +1,9 @@
-
-
 class User {
   String name;
   String surname;
   List<Wallet> wallets;
   List<Category> categories = [];
-  
+
   User({required this.name, required this.surname, required this.wallets}) {
     for (var wallet in wallets) {
       bool categoryExists = false;
@@ -39,16 +37,16 @@ class User {
 
   Map<String, List<Wallet>> getWalletsByCategory() {
     Map<String, List<Wallet>> groups = {};
-    
+
     for (var wallet in wallets) {
       String categoryName = wallet.category.name;
-      
+
       if (groups[categoryName] == null) {
         groups[categoryName] = [];
       }
       groups[categoryName]!.add(wallet);
     }
-    
+
     return groups;
   }
 
@@ -67,14 +65,14 @@ class User {
         newId = category.id + 1;
       }
     }
-    
+
     for (var category in categories) {
       if (category.name == name) {
         print('Bu kategori zaten mevcut: $name');
         return;
       }
     }
-    
+
     Category newCategory = Category(newId, name);
     categories.add(newCategory);
     print('yeni kategori eklendi: $name (ID: $newId)');
@@ -89,29 +87,34 @@ class User {
 
   void addWalletToCategory(String categoryName, double initialBalance) {
     Category? targetCategory;
-    
+
     for (var category in categories) {
       if (category.name == categoryName) {
         targetCategory = category;
         break;
       }
     }
-    
+
     if (targetCategory == null) {
       print('Kategori bulunamadı: $categoryName');
       return;
     }
-    
-    Wallet newWallet = Wallet(balance: initialBalance, category: targetCategory);
+
+    Wallet newWallet = Wallet(
+      balance: initialBalance,
+      category: targetCategory,
+    );
     wallets.add(newWallet);
-    print('$categoryName kategorisine $initialBalance bakiyeli yeni cüzdan eklendi');
+    print(
+      '$categoryName kategorisine $initialBalance₺ bakiyeli yeni cüzdan eklendi',
+    );
   }
 
   Wallet getHighestBalanceWallet() {
     if (wallets.isEmpty) {
       throw StateError('Kullanıcının hiç cüzdanı yok');
     }
-    
+
     Wallet highest = wallets[0];
     for (var wallet in wallets) {
       if (wallet.balance > highest.balance) {
@@ -121,42 +124,41 @@ class User {
     return highest;
   }
 
-
   String getLowestBalanceCategory() {
     if (wallets.isEmpty) {
       throw StateError('Kullanıcının hiç cüzdanı yok');
     }
-    
+
     var groups = getWalletsByCategory();
     String lowestCategory = '';
     double lowestBalance = double.infinity;
-    
+
     for (var categoryName in groups.keys) {
       List<Wallet> categoryWallets = groups[categoryName]!;
       double categoryTotal = 0;
-      
+
       for (var wallet in categoryWallets) {
         categoryTotal += wallet.balance;
       }
-      
+
       if (categoryTotal < lowestBalance) {
         lowestBalance = categoryTotal;
         lowestCategory = categoryName;
       }
     }
-    
+
     return lowestCategory;
   }
 
   List<Wallet> getWalletsSortedByBalance(String categoryName) {
     List<Wallet> categoryWallets = [];
-    
+
     for (var wallet in wallets) {
       if (wallet.category.name == categoryName) {
         categoryWallets.add(wallet);
       }
     }
-    
+
     for (int i = 0; i < categoryWallets.length; i++) {
       for (int j = 0; j < categoryWallets.length - 1; j++) {
         if (categoryWallets[j].balance > categoryWallets[j + 1].balance) {
@@ -166,7 +168,7 @@ class User {
         }
       }
     }
-    
+
     return categoryWallets;
   }
 }
@@ -174,8 +176,13 @@ class User {
 class Category {
   int id;
   String name;
-  
-  Category(this.id, this.name);
+
+  Category(this.id, this.name) {
+    if (id < 0) {
+      throw ArgumentError('Kategori ID negatif olamaz. Verilen ID: $id');
+    }
+    this.id = id;
+  }
 }
 
 class Wallet {
@@ -197,25 +204,36 @@ class Wallet {
       throw ArgumentError('Çekilecek miktar pozitif olmalıdır');
     }
     if (balance < amount) {
-      throw Exception('Yetersiz bakiye! Mevcut bakiye: $balance, Çekilmek istenen: $amount');
+      throw Exception(
+        'Yetersiz bakiye! Mevcut bakiye: $balance, Çekilmek istenen: $amount',
+      );
     }
     balance -= amount;
     print("Para cekme islemi: $amount, mevcut bakiye: $balance");
   }
 }
 
-
 void main() {
   final vadesiz = Category(1, "Vadesiz");
   final vadeli = Category(2, "Vadeli");
   final yatirim = Category(3, "Yatırım");
+
+  try {
+    final asd = Category(-123, "invalid");
+  } catch (e) {
+    print("Hata: $e");
+  }
 
   final wallet1 = Wallet(balance: 150000, category: vadesiz);
   final wallet2 = Wallet(balance: 0, category: vadeli);
   final wallet3 = Wallet(balance: 200000000, category: yatirim);
   final wallet4 = Wallet(balance: 1241243124, category: vadesiz);
 
-  final user = User(name: "Hüseyin", surname: "Şahinli", wallets: [wallet1, wallet2, wallet3, wallet4]);
+  final user = User(
+    name: "Hüseyin",
+    surname: "Şahinli",
+    wallets: [wallet1, wallet2, wallet3, wallet4],
+  );
 
   print("Kullanıcı Bilgileri");
   print("Ad Soyad: ${user.getFullName()}");
@@ -231,42 +249,49 @@ void main() {
 
   var groupedWallets = user.getWalletsByCategory();
   groupedWallets.forEach((category, wallets) {
-    double categoryTotal = wallets.fold(0.0, (sum, wallet) => sum + wallet.balance);
+    double categoryTotal = wallets.fold(
+      0.0,
+      (sum, wallet) => sum + wallet.balance,
+    );
     print("$category: ${wallets.length} cüzdan, Toplam: $categoryTotal");
   });
 
   print("\n============================\n");
 
   print("\nTransfer function");
-  print("Wallet1 Balance Before Transfer: ${wallet1.balance}, Wallet2: ${wallet2.balance}");
+  print(
+    "Wallet1 Balance Before Transfer: ${wallet1.balance}, Wallet2: ${wallet2.balance}",
+  );
   user.transfer(wallet1, wallet2, 500);
   print("After transfer: ${wallet1.balance}, Wallet2: ${wallet2.balance}");
   print("TotalBalance: ${user.getTotalBalance()} ");
 
   print("\n============================\n");
-  
+
   user.listCategories();
-  
+
   user.addCategory("Kripto");
   user.addCategory("Emeklilik");
   user.addCategory("Altın");
 
   user.addCategory("Kripto");
-  
+
   user.listCategories();
-  
+
   user.addWalletToCategory("Kripto", 50000);
   user.addWalletToCategory("Emeklilik", 100000);
-  
+
   user.addWalletToCategory("Emlak", 75000);
-  
+
   print("Toplam Cüzdan Sayısı: ${user.getWalletCount()}");
-  print("Toplam Bakiye: ${user.getTotalBalance()} ");
+  print("Toplam Bakiye: ${user.getTotalBalance()} ₺");
 
   print("\n============================\n");
-  
+
   var highestWallet = user.getHighestBalanceWallet();
-  print("\nen yüksek bakiye: ${highestWallet.balance} (${highestWallet.category.name})");
+  print(
+    "\nen yüksek bakiye: ${highestWallet.balance} (${highestWallet.category.name})",
+  );
 
   var lowestCategory = user.getLowestBalanceCategory();
   print("en düşük bakiye: $lowestCategory");
@@ -284,7 +309,7 @@ void main() {
   // } catch (e) {
   //   print("Hata yakalandı: $e");
   // }
-  
+
   try {
     wallet3.withdraw(2147483647);
   } catch (e) {
