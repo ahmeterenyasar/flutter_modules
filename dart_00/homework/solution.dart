@@ -4,6 +4,9 @@ class User {
   List<Wallet> wallets;
   List<Category> categories = [];
 
+/**
+ * user içersinden kategori çıkarılsın, exisist check kaldır.
+ */
   User({required this.name, required this.surname, required this.wallets}) {
     for (var wallet in wallets) {
       bool categoryExists = false;
@@ -27,6 +30,7 @@ class User {
     return wallets.length;
   }
 
+  // fold'a çevir
   double getTotalBalance() {
     double total = 0;
     for (var wallet in wallets) {
@@ -35,6 +39,7 @@ class User {
     return total;
   }
 
+  // string yerine category al -> id
   Map<String, List<Wallet>> getWalletsByCategory() {
     Map<String, List<Wallet>> groups = {};
 
@@ -49,7 +54,9 @@ class User {
 
     return groups;
   }
+// !! user içindeki list wallet'ı dön
 
+// required - []
   void transfer(Wallet fromWallet, Wallet toWallet, double amount) {
     if (amount <= 0) {
       throw ArgumentError('Transfer miktarı pozitif olmalıdır');
@@ -60,6 +67,7 @@ class User {
 
   void addCategory(String name) {
     int newId = 1;
+    // sort'a al sonra id ver
     for (var category in categories) {
       if (category.id >= newId) {
         newId = category.id + 1;
@@ -115,7 +123,8 @@ class User {
       throw StateError('Kullanıcının hiç cüzdanı yok');
     }
 
-    Wallet highest = wallets[0];
+    // list dönebilir, aynı değerli walletlar
+    Wallet highest = wallets.first;
     for (var wallet in wallets) {
       if (wallet.balance > highest.balance) {
         highest = wallet;
@@ -133,6 +142,7 @@ class User {
     String lowestCategory = '';
     double lowestBalance = double.infinity;
 
+  // categoryName olamadan dene. user model'den kullan.
     for (var categoryName in groups.keys) {
       List<Wallet> categoryWallets = groups[categoryName]!;
       double categoryTotal = 0;
@@ -153,6 +163,7 @@ class User {
   List<Wallet> getWalletsSortedByBalance(String categoryName) {
     List<Wallet> categoryWallets = [];
 
+    // sadece user listli solution?
     for (var wallet in wallets) {
       if (wallet.category.name == categoryName) {
         categoryWallets.add(wallet);
@@ -224,10 +235,10 @@ void main() {
   //   print("Hata: $e");
   // }
 
-  final wallet1 = Wallet(balance: 150000, category: vadesiz);
+  final wallet1 = Wallet(balance: 1500, category: vadesiz);
   final wallet2 = Wallet(balance: 0, category: vadeli);
-  final wallet3 = Wallet(balance: 200000000, category: yatirim);
-  final wallet4 = Wallet(balance: 1241243124, category: vadesiz);
+  final wallet3 = Wallet(balance: 2000, category: yatirim);
+  final wallet4 = Wallet(balance: 1500, category: vadesiz);
 
   final user = User(
     name: "Hüseyin",
@@ -242,8 +253,8 @@ void main() {
 
   print("\n============================\n");
 
-  wallet1.deposit(500);
-  wallet3.withdraw(300);
+  wallet2.deposit(500);
+  wallet3.withdraw(500);
 
   print("\n============================\n");
 
@@ -279,10 +290,10 @@ void main() {
 
   user.listCategories();
 
-  user.addWalletToCategory("Kripto", 50000);
-  user.addWalletToCategory("Emeklilik", 100000);
+  user.addWalletToCategory("Kripto", 5000);
+  user.addWalletToCategory("Emeklilik", 1000);
 
-  user.addWalletToCategory("Emlak", 75000);
+  user.addWalletToCategory("Emlak", 7500);
 
   print("Toplam Cüzdan Sayısı: ${user.getWalletCount()}");
   print("Toplam Bakiye: ${user.getTotalBalance()}");
@@ -297,6 +308,7 @@ void main() {
   var lowestCategory = user.getLowestBalanceCategory();
   print("en düşük bakiye: $lowestCategory");
 
+  // sort'la en düşüğü al.
   var sortedCashWallets = user.getWalletsSortedByBalance("Vadesiz");
   for (var i = 0; i < sortedCashWallets.length; i++) {
     print("${i + 1}. ${sortedCashWallets[i].balance}");
